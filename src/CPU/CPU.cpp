@@ -1,4 +1,4 @@
-
+#include	<iostream>
 #include	"CPU.hh"
 
 static	const std::string	operand_syntax[5] =
@@ -38,27 +38,47 @@ CPU::CPU(Chipset *c, Memory *m):
 {
 }
 
-std::string	CPU::exec()
+
+Chipset	*CPU::getChipset()	const
+{
+  return (this->chipset);
+}
+
+Memory	*CPU::getMemory()	const
+{
+  return (this->memory);
+}
+  
+void		CPU::setChipset(Chipset *c)
+{
+  this->chipset = c;
+}
+
+void		CPU::setMemory(Memory *m)
+{
+  this->memory = m;
+}
+
+
+void	CPU::exec()
 {
   std::vector<std::string>	*frame;
-  while ((frame = this->chipset->get()) != 0)
+  frame = this->chipset->get();
+  if (!frame->empty())
     {
-      if (!frame->empty())
+      std::string	f_action = frame->at(0);
+      std::map<std::string, t_ptrCPU>::iterator it = this->action.find(f_action);
+      if (it != this->action.end())
 	{
-	  std::string	f_action = frame->at(0);
-	  std::map<std::string, t_ptrCPU>::iterator it = this->action.find(f_action);
-	  if (it != this->action.end())
-	    {
-	      frame->erase(frame->begin());
-	      std::string	res = (this->*(*it).second)(*frame);
-	      if (res != "")
-		this->chipset->send(res);
-	    }
+	  frame->erase(frame->begin());
+	  std::string	res = (this->*(*it).second)(*frame);
+	  if (res != "")
+	    this->chipset->send(res);
 	}
     }
 }
 
-bool	CPU::checkParam(std::vector<std::string> &elms, int needed)
+bool	CPU::checkParam(std::vector<std::string> &elms, unsigned int needed)
 {
   return (elms.size() == needed);
 }
@@ -67,7 +87,7 @@ eOperandType	CPU::getOperandType(std::string &str)
 {
   unsigned int pos;
 
-  for (pos = 0; pos < str.size() && str[pos] != ')'; ++pos);
+  for (pos = 0; pos < str.size() && str[pos] != '('; ++pos);
   std::string	ope = str.substr(0, pos);
   for (unsigned int i = 0; i < NBR_OPERAND; ++i)
     if (ope == operand_syntax[i])
@@ -77,11 +97,14 @@ eOperandType	CPU::getOperandType(std::string &str)
 
 std::string	CPU::getOperandValue(std::string &str)
 {
-  if (str.size() && str[0] == '(')
+  unsigned int pos = 0;
+
+  for (pos = 0; pos < str.size() && str[pos] != '('; ++pos);
+  if (str.size() && str[pos] == '(')
     {
-      str = str.substr(0, 1);
+      str = str.substr(pos + 1);
       for (unsigned int i = 1; i < str.size(); ++i)
-	if (str[0] == ')')
+	if (str[i] == ')')
 	  return (str.substr(0, i));
     }
   //exeption erreur de syntaxe;
@@ -89,7 +112,7 @@ std::string	CPU::getOperandValue(std::string &str)
 
 eTokenValue	CPU::getValueType(const std::string &value) const
 {
-  if (value.find(".") != std::string::npos)
+  if (value.find(".") == std::string::npos)
     return (INTEGER);
   else if (value.find(".") == value.rfind("."))
     return (FLOAT);
@@ -175,7 +198,6 @@ std::string	CPU::push(std::vector<std::string> &frame)
     {
       eOperandType	type = this->getOperandType(frame[0]);
       std::string	value = this->getOperandValue(frame[0]);
-
       if (well_typed(type, value))
 	{
 	  this->registers[0] = this->memory->createOperand(type, value);
@@ -200,7 +222,7 @@ std::string	CPU::dump(std::vector<std::string> &frame)
   return (std::string(""));
  //exeption pas assez d'argument
 }
-std::string	CPU::exit(std::vector<std::string> &frame)
+std::string	CPU::exit(std::vector<std::string> &)
 {
   return (std::string("SAM EXIT"));
 }

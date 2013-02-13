@@ -9,6 +9,7 @@ MEMORY	=	./src/Memory/
 
 
 SRC	=	$(CPU)CPU.cpp \
+		$(CPU)main.cpp \
 		$(CHIPSET)Chipset.cpp \
 		$(MEMORY)Memory.cpp
 
@@ -18,7 +19,7 @@ INC	=	-I $(CPU) -I $(CHIPSET) -I $(MEMORY)
 
 CC	=	g++
 
-CXXFLAGS	+=	-Wall -W $(INC)
+CPPFLAGS	+=	-Wall -W $(INC) -g
 
 
 # Rules
@@ -26,10 +27,10 @@ CXXFLAGS	+=	-Wall -W $(INC)
 all:	$(NAME)
 
 %.$(OBJ_EXT): %.$(SRC_EXT)
-	$(CC) -o $@ -c $< $(INC) $(CFLAGS)
+	$(CC) -o $@ -c $< $(INC) $(CPPFLAGS)
 
 $(NAME):	$(OBJ)
-	$(CC) -o $@ $^ $(INC) $(CFLAGS)
+	$(CC) -o $@ $^ $(INC) $(CPPFLAGS)
 
 clean:
 	rm -f $(OBJ)

@@ -35,9 +35,9 @@ public:
   CPU(const CPU&);
   CPU &operator=(const CPU &);
 
-  std::string	exec();
+  void		exec();
 
-  bool		checkParam(std::vector<std::string> &, int);
+  bool		checkParam(std::vector<std::string> &, unsigned int);
 
   std::string	add(std::vector<std::string> &);
   std::string	div(std::vector<std::string> &);
@@ -50,6 +50,12 @@ public:
   std::string	dump(std::vector<std::string> &);
   std::string	exit(std::vector<std::string> &);
   std::string	assert(std::vector<std::string> &);
+
+  Chipset	*getChipset()	const;
+  Memory	*getMemory()	const;
+  
+  void		setChipset(Chipset *);
+  void		setMemory(Memory *);
 
 private:
   eOperandType	getOperandType(std::string &str);

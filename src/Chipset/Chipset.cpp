@@ -36,7 +36,8 @@ std::vector<std::string>	*Chipset::get()
 
 void	Chipset::send(const std::string str)
 {
-  this->output << str;
+  if (str.size() > 0)
+    this->output << str;
 }
 
 bool	Chipset::is_empty()	const
