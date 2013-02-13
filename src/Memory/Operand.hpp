@@ -2,6 +2,7 @@
 # define __OPERAND_H__
 
 #include <sstream>
+#include <limits>
 #include "IOperand.hh"
 #include "Memory.hh"
 
@@ -11,6 +12,7 @@ class Operand : public IOperand
 private:
   eOperandType	_type;
   const T		_value;
+
 
   T		getValueOfType(std::string const & string_value) const
   {
@@ -56,6 +58,10 @@ public:
     T op_value;
 
     op_value = this->getValueOfType((op->toString()));
+    if ((op_value > 0) && (this->_value > (std::numeric_limits<T>::max()) - op_value))
+      return (0);
+    if ((op_value < 0) && (this->_value < (std::numeric_limits<T>::min()) - op_value))
+      return (0);
     return (new Operand<T>(this->_type, this->_value + op_value));
   }
 
@@ -64,6 +70,10 @@ public:
     T op_value;
 
     op_value = this->getValueOfType(op->toString());
+    if ((op_value < 0) && (this->_value < (std::numeric_limits<T>::max()) - op_value))
+      return (0);
+    if ((op_value > 0) && (this->_value > (std::numeric_limits<T>::min()) - op_value))
+      return (0);
     return (new Operand<T>(this->_type, this->_value - op_value));
   }
 
@@ -72,6 +82,8 @@ public:
     T op_value;
 
     op_value = this->getValueOfType(op->toString());
+    if ((std::numeric_limits<T>::max() / this->_value) < op_value)
+      return (0);
     return (new Operand<T>(this->_type, this->_value * op_value));
   }
 

@@ -5,7 +5,7 @@
 // Login   <kevin platel@epitech.net>
 //
 // Started on  Tue Feb 12 10:24:50 2013 vink
-// Last update Tue Feb 12 13:06:35 2013 vink
+// Last update Tue Feb 12 21:45:08 2013 vink
 //
 
 #include <iostream>
@@ -27,9 +27,16 @@ Memory::Memory()
   this->create[Double] = &Memory::createDouble;
 }
 
-void	Memory::dump()
+std::string &	Memory::dump()
 {
-  std::for_each(this->mem.begin(), this->mem.end(), print);
+  this->_dump = "";
+  this->_dump = (std::for_each(this->mem.begin(), this->mem.end(), *this))._dump;
+  return (this->_dump);
+}
+
+void		Memory::operator()(IOperand *a)
+{
+  this->_dump += (a->toString() + "\n");
 }
 
 IOperand*	Memory::get() const

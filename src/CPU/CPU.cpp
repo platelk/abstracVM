@@ -22,5 +22,4 @@ CPU::~CPU()
 
 std::string	CPU::exec(std::vector<std::string> &frame)
 {
-
-} 
+}
