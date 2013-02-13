@@ -23,13 +23,13 @@ std::vector<std::string>	*Chipset::get()
 	tmp_line = tmp_line.substr(0, pos);
       
       std::stringstream		line(tmp_line);
-      std::string			buff;
+      std::string		buff;
       std::vector<std::string>	*res = new std::vector<std::string>;
   
       while (line >> buff)
-	res->push_back(std::string(buff));
+	res->push_back(buff);
       
-      return ((res->empty()) ? (0) : (res));
+      return (res);
     }
   return (0);
 }

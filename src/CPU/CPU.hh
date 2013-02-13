@@ -9,6 +9,12 @@
 #include	"IOperand.hh"
 #include	"Memory.hh"
 
+#define		NBR_OPERAND	5
+
+class	CPU;
+
+typedef	std::string (CPU::*t_ptrCPU)(std::vector<std::string> &);
+
 enum	eTokenValue
   {
     INTEGER,
@@ -18,12 +24,13 @@ enum	eTokenValue
 
 class	CPU
 {
-  std::map<std::string, void CPU::*ptr(std::vector<std::string>)>	action;
+  std::map<std::string, t_ptrCPU>					action;
   Chipset								*chipset;
   Memory								*memory;
   IOperand								*registers[4];
+
 public:
-  CPU(Memory *, Chipset *);
+  CPU(Chipset *, Memory *);
   ~CPU();
   CPU(const CPU&);
   CPU &operator=(const CPU &);
@@ -43,8 +50,9 @@ public:
   std::string	dump(std::vector<std::string> &);
   std::string	exit(std::vector<std::string> &);
   std::string	assert(std::vector<std::string> &);
+
 private:
-  eOperandType	getOperand(const std::string &); 
+  eOperandType	getOperandType(std::string &str);
   std::string	getOperandValue(std::string &);
   bool		well_typed(eOperandType, const std::string &) const;
   eTokenValue	getValueType(const std::string &) const;

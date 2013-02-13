@@ -32,7 +32,6 @@ CPU::CPU(Chipset *c, Memory *m):
   this->action["dump"] = &CPU::dump;
   this->action["exit"] = &CPU::exit;
   this->action["assert"] = &CPU::assert;
-  this->registers = {0};
 }
 
   CPU::~CPU()
@@ -44,15 +43,14 @@ std::string	CPU::exec()
   std::vector<std::string>	*frame;
   while ((frame = this->chipset->get()) != 0)
     {
-      if (!frame.empty())
+      if (!frame->empty())
 	{
 	  std::string	f_action = frame->at(0);
-	  std::vector<std::string, void CPU::*ptr(std::vector<std::string>)>::iterator it = this->action.find(f_action);
-	  std::vector<std::string, void CPU::*ptr(std::vector<std::string>)>::const_iterator end = this->action.end();
-	  if (it != end)
+	  std::map<std::string, t_ptrCPU>::iterator it = this->action.find(f_action);
+	  if (it != this->action.end())
 	    {
-	      frame.erase(0);
-	      std::string	res = *it(frame);
+	      frame->erase(frame->begin());
+	      std::string	res = (this->*(*it).second)(*frame);
 	      if (res != "")
 		this->chipset->send(res);
 	    }
@@ -67,11 +65,13 @@ bool	CPU::checkParam(std::vector<std::string> &elms, int needed)
 
 eOperandType	CPU::getOperandType(std::string &str)
 {
-  for (unsigned int pos = 0; pos < str.size() && str[pos] != ')'; ++pos);
+  unsigned int pos;
+
+  for (pos = 0; pos < str.size() && str[pos] != ')'; ++pos);
   std::string	ope = str.substr(0, pos);
   for (unsigned int i = 0; i < NBR_OPERAND; ++i)
     if (ope == operand_syntax[i])
-      return (i);
+      return (static_cast<eOperandType>(i));
   //exeption unknow operand type
 }
 
@@ -99,23 +99,23 @@ eTokenValue	CPU::getValueType(const std::string &value) const
 
 bool	CPU::well_typed(eOperandType op, const std::string &value) const
 {
-  return (operand_value[op] == this->getValueType(value))
+  return (operand_value[op] == this->getValueType(value));
 }
 
-std::string	add(std::vector<std::string> &frame)
+std::string	CPU::add(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 0))
     {
       //exeption rien sur la pile
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
-      this->memory->push(this->registers[0] + this->registers[1]);
+      this->memory->push(*this->registers[0] + this->registers[1]);
     }
   //exeption pass assez d'argument
   return (std::string(""));
 }
 
-std::string	div(std::vector<std::string> &frame)
+std::string	CPU::div(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 0))
     {
@@ -123,26 +123,26 @@ std::string	div(std::vector<std::string> &frame)
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
       //exeption divition par zero;
-      this->memory->push(this->registers[0] / this->registers[1]);
+      this->memory->push(*this->registers[0] / this->registers[1]);
     }
   //exeption pass assez d'argument
  return (std::string(""));
 }
 
-std::string	sub(std::vector<std::string> &frame)
+std::string	CPU::sub(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
     {
       //exeption rien sur la pile
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
-      this->memory->push(this->registers[0] - this->registers[1]);
+      this->memory->push(*this->registers[0] - this->registers[1]);
     }
   //exeption pass assez d'argument
  return (std::string(""));
 }
 
-std::string	mod(std::vector<std::string> &frame)
+std::string	CPU::mod(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
     {
@@ -150,26 +150,26 @@ std::string	mod(std::vector<std::string> &frame)
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
       //exeption divition par zero;
-      this->memory->push(this->registers[0] % this->registers[1]);
+      this->memory->push(*this->registers[0] % this->registers[1]);
     }
  //exeption pass assez d'argument
  return (std::string(""));
 }
 
-std::string	mul(std::vector<std::string> &frame)
+std::string	CPU::mul(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
     {
       //exeption rien sur la pile
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
-      this->memory->push(this->registers[0] * this->registers[1]);
+      this->memory->push(*this->registers[0] * this->registers[1]);
     }
  //exeption pass assez d'argument
  return (std::string(""));
 }
 
-std::string	push(std::vector<std::string> &frame)
+std::string	CPU::push(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 1))
     {
@@ -186,26 +186,26 @@ std::string	push(std::vector<std::string> &frame)
  //exeption pas assez d'argument
  return (std::string(""));
 }
-std::string	pop(std::vector<std::string> &frame)
+std::string	CPU::pop(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
    this->memory->pop();
  return (std::string(""));
  //exeption pas assez d'argument
 }
-std::string	dump(std::vector<std::string> &frame)
+std::string	CPU::dump(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 0))
     return (this->memory->dump());
   return (std::string(""));
  //exeption pas assez d'argument
 }
-std::string	exit(std::vector<std::string> &frame)
+std::string	CPU::exit(std::vector<std::string> &frame)
 {
   return (std::string("SAM EXIT"));
 }
 
-std::string	assert(std::vector<std::string> &frame)
+std::string	CPU::assert(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 1))
     {

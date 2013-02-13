@@ -3,15 +3,22 @@ NAME	=	avm
 SRC_EXT	=	cpp
 OBJ_EXT	=	o
 
-SRC	=
+CPU	=	./src/CPU/
+CHIPSET	=	./src/Chipset/
+MEMORY	=	./src/Memory/
+
+
+SRC	=	$(CPU)CPU.cpp \
+		$(CHIPSET)Chipset.cpp \
+		$(MEMORY)Memory.cpp
 
 OBJ	=	$(SRC:.$(SRC_EXT)=.$(OBJ_EXT))
 
-INC	=	-I $(INC_DIR)
+INC	=	-I $(CPU) -I $(CHIPSET) -I $(MEMORY)
 
 CC	=	g++
 
-CFLAGS	+=	-Wall -W
+CXXFLAGS	+=	-Wall -W $(INC)
 
 
 # Rules
