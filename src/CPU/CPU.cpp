@@ -48,7 +48,7 @@ Memory	*CPU::getMemory()	const
 {
   return (this->memory);
 }
-  
+
 void		CPU::setChipset(Chipset *c)
 {
   this->chipset = c;
@@ -125,6 +125,18 @@ bool	CPU::well_typed(eOperandType op, const std::string &value) const
   return (operand_value[op] == this->getValueType(value));
 }
 
+void		CPU::checkPrecision()
+{
+  this->registers[2] = this->registers[0];
+  this->registers[3] = this->registers[1];
+  if (this->registers[0]->getType() < this->registers[1]->getType())
+    this->registers[2] = this->memory->createOperand(this->registers[1]->getType(),
+						     this->registers[0]->toString());
+  else if (this->registers[1]->getType() < this->registers[0]->getType())
+    this->registers[3] = this->memory->createOperand(this->registers[0]->getType(),
+						     this->registers[1]->toString());
+}
+
 std::string	CPU::add(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 0))
@@ -132,7 +144,8 @@ std::string	CPU::add(std::vector<std::string> &frame)
       //exeption rien sur la pile
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
-      this->memory->push(*this->registers[0] + this->registers[1]);
+      this->checkPrecision();
+      this->memory->push(*this->registers[2] + this->registers[3]);
     }
   //exeption pass assez d'argument
   return (std::string(""));
@@ -146,7 +159,8 @@ std::string	CPU::div(std::vector<std::string> &frame)
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
       //exeption divition par zero;
-      this->memory->push(*this->registers[0] / this->registers[1]);
+      this->checkPrecision();
+      this->memory->push(*this->registers[2] / this->registers[3]);
     }
   //exeption pass assez d'argument
  return (std::string(""));
@@ -159,7 +173,8 @@ std::string	CPU::sub(std::vector<std::string> &frame)
       //exeption rien sur la pile
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
-      this->memory->push(*this->registers[0] - this->registers[1]);
+      this->checkPrecision();
+      this->memory->push(*this->registers[2] - this->registers[3]);
     }
   //exeption pass assez d'argument
  return (std::string(""));
@@ -172,8 +187,9 @@ std::string	CPU::mod(std::vector<std::string> &frame)
       //exeption rien sur la pile
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
+      this->checkPrecision();
       //exeption divition par zero;
-      this->memory->push(*this->registers[0] % this->registers[1]);
+      this->memory->push(*this->registers[2] % this->registers[3]);
     }
  //exeption pass assez d'argument
  return (std::string(""));
@@ -186,7 +202,8 @@ std::string	CPU::mul(std::vector<std::string> &frame)
       //exeption rien sur la pile
       this->registers[0] = this->memory->pop();
       this->registers[1] = this->memory->pop();
-      this->memory->push(*this->registers[0] * this->registers[1]);
+      this->checkPrecision();
+      this->memory->push(*this->registers[2] * this->registers[3]);
     }
  //exeption pass assez d'argument
  return (std::string(""));

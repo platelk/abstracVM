@@ -51,9 +51,11 @@ public:
   std::string	exit(std::vector<std::string> &);
   std::string	assert(std::vector<std::string> &);
 
+  void		checkPrecision();
+
   Chipset	*getChipset()	const;
   Memory	*getMemory()	const;
-  
+
   void		setChipset(Chipset *);
   void		setMemory(Memory *);
 
