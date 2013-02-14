@@ -1,0 +1,46 @@
+
+#include	"MotherBoard.hh"
+
+MotherBoard::MotherBoard(Chipset *c, Memory *m, CPU *u):
+  chipset(c), memory(m), cpu(u)
+{
+}
+
+MotherBoard::~MotherBoard()
+{
+}
+
+void	MotherBoard::setChipset(chipset *c)
+{
+  this->chipset = c;
+  if (this->cpu)
+    this->cpu->setChipset(c);
+}
+void	MotherBoard::setCPU(CPU *u)
+{
+  this->cpu = u;
+}
+void	MotherBoard::setMemory(Memory *m)
+{
+  this->memory = m;
+  if (this->memory)
+    this->memory = m;
+}
+
+Chipset	MotherBoard::*getChipset()	const
+{
+  return (this->chipset);
+}
+Memory	MotherBoard::*getMemory()	const
+{
+  return (this->memory);
+}
+CPU	MotherBoard::*getCPU()	const
+{
+  return (this->cpu);
+}
+
+void	MotherBoard::boot()
+{
+  while (this->cpu->exec());
+}

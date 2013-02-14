@@ -20,7 +20,7 @@ static	const eTokenValue	operand_value[5] =
   };
 
 CPU::CPU(Chipset *c, Memory *m):
-  chipset(c), memory(m)
+  chipset(c), memory(m), finished(false)
 {
   this->action["add"] = &CPU::add;
   this->action["sub"] = &CPU::sub;
@@ -36,6 +36,8 @@ CPU::CPU(Chipset *c, Memory *m):
 
   CPU::~CPU()
 {
+  if (!finished)
+    std::cout << "ERROR" << std::endl;
 }
 
 
@@ -60,11 +62,11 @@ void		CPU::setMemory(Memory *m)
 }
 
 
-void	CPU::exec()
+bool	CPU::exec()
 {
   std::vector<std::string>	*frame;
   frame = this->chipset->get();
-  if (!frame->empty())
+  if (frame && !frame->empty())
     {
       std::string	f_action = frame->at(0);
       std::map<std::string, t_ptrCPU>::iterator it = this->action.find(f_action);
@@ -73,9 +75,14 @@ void	CPU::exec()
 	  frame->erase(frame->begin());
 	  std::string	res = (this->*(*it).second)(*frame);
 	  if (res != "")
-	    this->chipset->send(res);
+	    if (res == "SAM EXIT")
+	      this->finished = true;
+	    else
+	      this->chipset->send(res);
+	  return (true);
 	}
     }
+  return (false);
 }
 
 bool	CPU::checkParam(std::vector<std::string> &elms, unsigned int needed)

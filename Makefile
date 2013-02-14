@@ -3,19 +3,22 @@ NAME	=	avm
 SRC_EXT	=	cpp
 OBJ_EXT	=	o
 
-CPU	=	./src/CPU/
-CHIPSET	=	./src/Chipset/
-MEMORY	=	./src/Memory/
-
+CPU		=	./src/CPU/
+CHIPSET		=	./src/Chipset/
+MEMORY		=	./src/Memory/
+IO		=	./src/IO/
+MOTHERBOARD	=	./src/MotherBoard/
 
 SRC	=	$(CPU)CPU.cpp \
-		$(CPU)main.cpp \
 		$(CHIPSET)Chipset.cpp \
-		$(MEMORY)Memory.cpp
+		$(MEMORY)Memory.cpp \
+		$(IO)IO.cpp \
+		$(MOTHERBOARD)MotherBoard.cpp \
+		src/main.cpp
 
 OBJ	=	$(SRC:.$(SRC_EXT)=.$(OBJ_EXT))
 
-INC	=	-I $(CPU) -I $(CHIPSET) -I $(MEMORY)
+INC	=	-I $(CPU) -I $(CHIPSET) -I $(MEMORY) -I $(IO) -I $(MOTHERBOARD)
 
 CC	=	g++
 

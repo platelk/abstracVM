@@ -2,23 +2,19 @@
 #ifndef		__CHIPSET_HH__
 # define	__CHIPSET_HH__
 
-#include	<ostream>
-#include	<istream>
+#include	"IO.hh"
 #include	<string>
 #include	<vector>
 
 class	Chipset
 {
-  std::istream	&input;
-  std::ostream	&output;
+  IO		*io;
 public:
-  Chipset(std::istream &, std::ostream &);
+  Chipset(IO *t);
   ~Chipset();
   Chipset(const Chipset &);
   Chipset	&operator=(const Chipset &);
 
-  bool		is_empty()		const;
-  
   std::vector<std::string>	*get();
   void				send(const std::string);
   
