@@ -28,14 +28,14 @@ class	CPU
   Chipset								*chipset;
   Memory								*memory;
   IOperand								*registers[4];
-
+  bool									finished;
 public:
   CPU(Chipset *, Memory *);
   ~CPU();
   CPU(const CPU&);
   CPU &operator=(const CPU &);
 
-  void		exec();
+  bool		exec();
 
   bool		checkParam(std::vector<std::string> &, unsigned int);
 

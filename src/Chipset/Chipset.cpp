@@ -2,8 +2,8 @@
 #include	<ios>
 #include	"Chipset.hh"
 
-Chipset::Chipset(std::istream &in, std::ostream &out):
-  input(in), output(out)
+Chipset::Chipset(IO *t):
+  io(t)
 {
 }
 
@@ -15,7 +15,7 @@ std::vector<std::string>	*Chipset::get()
 {
   std::string		tmp_line;
   
-  if (getline(this->input, tmp_line))
+  if ((tmp_line = this->io->get()) != "EOF")
     {
       size_t pos = tmp_line.find(";");
 
@@ -37,10 +37,5 @@ std::vector<std::string>	*Chipset::get()
 void	Chipset::send(const std::string str)
 {
   if (str.size() > 0)
-    this->output << str;
-}
-
-bool	Chipset::is_empty()	const
-{
-  return (!this->input.good());
+    this->io->send(str);
 }
