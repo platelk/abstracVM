@@ -15,7 +15,7 @@ IO::IO(std::istream &i, std::ostream &o):
       if ((is >> end) == ";;")
 	enough = true;
       else
-	  this->buffer << line << std::endl;
+	this->buffer << line << std::endl;
     }
 }
 

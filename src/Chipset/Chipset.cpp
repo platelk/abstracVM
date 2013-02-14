@@ -1,3 +1,4 @@
+#include	<iostream>
 #include	<sstream>
 #include	<ios>
 #include	"Chipset.hh"
@@ -15,7 +16,7 @@ std::vector<std::string>	*Chipset::get()
 {
   std::string		tmp_line;
   
-  if ((tmp_line = this->io->get()) != "EOF")
+  while ((tmp_line = this->io->get()) != "EOF")
     {
       size_t pos = tmp_line.find(";");
 
@@ -28,8 +29,8 @@ std::vector<std::string>	*Chipset::get()
   
       while (line >> buff)
 	res->push_back(buff);
-      
-      return (res);
+      if (res->size())
+	return (res);
     }
   return (0);
 }
