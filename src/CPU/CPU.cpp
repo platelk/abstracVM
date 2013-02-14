@@ -81,6 +81,11 @@ bool	CPU::exec()
 	      this->chipset->send(res);
 	  return (true);
 	}
+      else
+	{
+	  std::string	error("Unknown instruction ");
+	  throw CPU::UnknownInstruction(error + f_action, __LINE__ );
+	}
     }
   return (false);
 }
@@ -99,7 +104,8 @@ eOperandType	CPU::getOperandType(std::string &str)
   for (unsigned int i = 0; i < NBR_OPERAND; ++i)
     if (ope == operand_syntax[i])
       return (static_cast<eOperandType>(i));
-  //exeption unknow operand type
+  std::string	error("Unknown operand type ");
+  throw CPU::UnknownOperandType(error + ope, __LINE__);
 }
 
 std::string	CPU::getOperandValue(std::string &str)
@@ -114,7 +120,7 @@ std::string	CPU::getOperandValue(std::string &str)
 	if (str[i] == ')')
 	  return (str.substr(0, i));
     }
-  //exeption erreur de syntaxe;
+  throw CPU::SyntaxError("Syntax error, missing character '('", __LINE__);
 }
 
 eTokenValue	CPU::getValueType(const std::string &value) const
@@ -154,7 +160,8 @@ std::string	CPU::add(std::vector<std::string> &frame)
       this->checkPrecision();
       this->memory->push(*this->registers[2] + this->registers[3]);
     }
-  //exeption pass assez d'argument
+  else
+    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
   return (std::string(""));
 }
 
@@ -169,7 +176,8 @@ std::string	CPU::div(std::vector<std::string> &frame)
       this->checkPrecision();
       this->memory->push(*this->registers[2] / this->registers[3]);
     }
-  //exeption pass assez d'argument
+  else
+    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
  return (std::string(""));
 }
 
@@ -183,7 +191,8 @@ std::string	CPU::sub(std::vector<std::string> &frame)
       this->checkPrecision();
       this->memory->push(*this->registers[2] - this->registers[3]);
     }
-  //exeption pass assez d'argument
+ else
+   throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
  return (std::string(""));
 }
 
@@ -198,7 +207,8 @@ std::string	CPU::mod(std::vector<std::string> &frame)
       //exeption divition par zero;
       this->memory->push(*this->registers[2] % this->registers[3]);
     }
- //exeption pass assez d'argument
+ else
+   throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
  return (std::string(""));
 }
 
@@ -212,7 +222,8 @@ std::string	CPU::mul(std::vector<std::string> &frame)
       this->checkPrecision();
       this->memory->push(*this->registers[2] * this->registers[3]);
     }
- //exeption pass assez d'argument
+ else
+   throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
  return (std::string(""));
 }
 
@@ -227,24 +238,31 @@ std::string	CPU::push(std::vector<std::string> &frame)
 	  this->registers[0] = this->memory->createOperand(type, value);
 	  this->memory->push(this->registers[0]);
 	}
-      //exeption bad type;
+      else
+	{
+	  std::string	error("Syntax error, bad type for ");
+	  throw CPU::SyntaxError(error + value, __LINE__);
+	}
     }
- //exeption pas assez d'argument
+ else
+   throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
  return (std::string(""));
 }
 std::string	CPU::pop(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
    this->memory->pop();
+  else
+   throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
  return (std::string(""));
- //exeption pas assez d'argument
 }
 std::string	CPU::dump(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 0))
     return (this->memory->dump());
+  else
+    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
   return (std::string(""));
- //exeption pas assez d'argument
 }
 std::string	CPU::exit(std::vector<std::string> &)
 {
@@ -262,11 +280,16 @@ std::string	CPU::assert(std::vector<std::string> &frame)
 	{
 	  this->registers[0] = this->memory->pop();
 	  this->memory->push(this->registers[0]);
-	  //if (this->registers[0]->toString() != value)
-	    //exeption
+	  if (this->registers[0]->toString() != value)
+	    throw AssertFaillure("Instruction \"assert\" fail", __LINE__);  
 	}
-      //exeption bad type;
+      else
+	{
+	  std::string	error("Syntax error, bad type for ");
+	  throw CPU::SyntaxError(error + value, __LINE__);
+	}
     }
-  //exeption pas assez d'argument
+  else
+    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
   return (std::string(""));
 }

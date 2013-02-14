@@ -30,6 +30,13 @@ class	CPU
   IOperand								*registers[4];
   bool									finished;
 public:
+
+  class		UnknownInstruction:	public	CPUException {};
+  class		UnknownOperandType:	public	CPUException {};
+  class		MissingExit:		public	CPUException {};
+  class		AssertFaillure:		public	CPUException {};
+  class		SyntaxError:		public	CPUException {};
+
   CPU(Chipset *, Memory *);
   ~CPU();
   CPU(const CPU&);
