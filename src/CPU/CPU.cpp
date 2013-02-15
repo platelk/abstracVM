@@ -75,10 +75,12 @@ bool	CPU::exec()
 	  frame->erase(frame->begin());
 	  std::string	res = (this->*(*it).second)(*frame);
 	  if (res != "")
-	    if (res == "SAM EXIT")
-	      this->finished = true;
-	    else
-	      this->chipset->send(res);
+	    {
+	      if (res == "SAM EXIT")
+		this->finished = true;
+	      else
+		this->chipset->send(res);
+	    }
 	  return (true);
 	}
       else
@@ -292,4 +294,9 @@ std::string	CPU::assert(std::vector<std::string> &frame)
   else
     throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
   return (std::string(""));
+}
+
+UnknownInstruction::~UnknownInstruction()
+{
+
 }

@@ -30,8 +30,12 @@ class	CPU
   IOperand								*registers[4];
   bool									finished;
 public:
-
-  class		UnknownInstruction:	public	CPUException {};
+  
+  class		UnknownInstruction:	public	CPUException
+  {
+  public:
+    virtual ~UnknownInstruction();
+  };
   class		UnknownOperandType:	public	CPUException {};
   class		MissingExit:		public	CPUException {};
   class		AssertFaillure:		public	CPUException {};
