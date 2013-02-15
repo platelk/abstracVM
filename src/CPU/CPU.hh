@@ -8,6 +8,7 @@
 #include	"Chipset.hh"
 #include	"IOperand.hh"
 #include	"Memory.hh"
+#include	"ModExceptions.hh"
 
 #define		NBR_OPERAND	5
 
@@ -34,12 +35,33 @@ public:
   class		UnknownInstruction:	public	CPUException
   {
   public:
-    virtual ~UnknownInstruction();
+    UnknownInstruction(const std::string &msg, int line): CPUException(msg, line) {}
+    virtual ~UnknownInstruction() throw() {}
   };
-  class		UnknownOperandType:	public	CPUException {};
-  class		MissingExit:		public	CPUException {};
-  class		AssertFaillure:		public	CPUException {};
-  class		SyntaxError:		public	CPUException {};
+  class		UnknownOperandType:	public	CPUException
+  {
+  public:
+    UnknownOperandType(const std::string &msg, int line): CPUException(msg, line) {}
+    virtual ~UnknownOperandType() throw() {}
+  };
+  class		MissingExit:		public	CPUException
+  {
+  public:
+    MissingExit(const std::string &msg, int line): CPUException(msg, line) {}
+    virtual ~MissingExit() throw() {}
+  };
+  class		AssertFaillure:		public	CPUException
+  {
+  public:
+    AssertFaillure(const std::string &msg, int line): CPUException(msg, line) {}
+    virtual ~AssertFaillure() throw() {}
+  };
+  class		SyntaxError:		public	CPUException
+  {
+  public:
+    SyntaxError(const std::string &msg, int line): CPUException(msg, line) {}
+    virtual ~SyntaxError() throw() {}
+  };
 
   CPU(Chipset *, Memory *);
   ~CPU();

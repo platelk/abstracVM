@@ -31,24 +31,24 @@ public:
     Overflow(const std::string &msg, int line)
       : OperandException(msg, line)
     {}
-    virtual ~Overflow() {}
-  }
+    virtual ~Overflow() throw() {}
+  };
   class Underflow : public OperandException
   {
   public:
     Underflow(const std::string &msg, int line)
       : OperandException(msg, line)
     {}
-    virtual ~Underflow() {}
-  }
+    virtual ~Underflow() throw() {}
+  };
   class DivideByZero : public OperandException
   {
   public:
     DivideByZero(const std::string &msg, int line)
       : OperandException(msg, line)
     {}
-    virtual ~DivideByZero() {}
-  }
+    virtual ~DivideByZero() throw() {}
+  };
 
   class InvalidOperation : public OperandException
   {
@@ -56,8 +56,8 @@ public:
     InvalidOperation(const std::string &msg, int line)
       : OperandException(msg, line)
     {}
-    virtual ~InvalidOperation() {}
-  }
+    virtual ~InvalidOperation() throw(){}
+  };
 
   Operand(eOperandType type, T const value)
     : _type(type), _value(value)

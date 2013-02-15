@@ -8,18 +8,14 @@ CHIPSET		=	./src/Chipset/
 MEMORY		=	./src/Memory/
 IO		=	./src/IO/
 MOTHERBOARD	=	./src/MotherBoard/
-<<<<<<< HEAD
-EXCEPTION	=	./src/Exception/
-=======
 EXCEPTION	=	./src/Exceptions/
->>>>>>> eb11b314b21f23ffa87eb611491e570c817d211f
 
 SRC	=	$(CPU)CPU.cpp \
 		$(CHIPSET)Chipset.cpp \
 		$(MEMORY)Memory.cpp \
 		$(IO)IO.cpp \
 		$(MOTHERBOARD)MotherBoard.cpp \
-		$(EXCEPTION)CPUException.cpp \
+		$(EXCEPTION)ModExceptions.cpp \
 		src/main.cpp
 
 OBJ	=	$(SRC:.$(SRC_EXT)=.$(OBJ_EXT))

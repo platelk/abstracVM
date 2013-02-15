@@ -296,7 +296,4 @@ std::string	CPU::assert(std::vector<std::string> &frame)
   return (std::string(""));
 }
 
-UnknownInstruction::~UnknownInstruction()
-{
 
-}
