@@ -10,9 +10,8 @@ CPUException::CPUException(const std::string &msg, int line)
   this->msg = o.str();
 }
 CPUException::~CPUException()	throw()
-{
-  //delete registers?
-}
+{}
+
 const char      *CPUException::what() const throw()
 {
   return (this->msg.c_str());
@@ -26,9 +25,7 @@ MemoryException::MemoryException(const std::string &msg, int line)
   this->msg = o.str();
 }
 MemoryException::~MemoryException() throw()
-{
-  //delete registers?
-}
+{}
 const char      *MemoryException::what() const throw()
 {
   return (this->msg.c_str());
@@ -42,9 +39,7 @@ OperandException::OperandException(const std::string &msg, int line)
   this->msg = o.str();
 }
 OperandException::~OperandException() throw()
-{
-  //delete registers?
-}
+{}
 const char      *OperandException::what() const throw()
 {
   return (this->msg.c_str());

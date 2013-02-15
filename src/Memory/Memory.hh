@@ -52,6 +52,15 @@ public:
     }
     virtual ~InvalidPush() throw() {}
   };
+  class	InvalidPops : public MemoryException
+  {
+  public:
+    InvalidPops(const std::string &msg, int line)
+      : MemoryException(msg, line)
+    {
+    }
+    virtual ~InvalidPops() throw() {}
+  };
 };
 
 #endif /* !__MEMORY_H__ */

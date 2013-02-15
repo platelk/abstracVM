@@ -156,9 +156,15 @@ std::string	CPU::add(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 0))
     {
-      //exeption rien sur la pile
-      this->registers[0] = this->memory->pop();
-      this->registers[1] = this->memory->pop();
+      try
+	{
+	  this->registers[0] = this->memory->pop();
+	  this->registers[1] = this->memory->pop();
+	}
+      catch (Memory::EmptyStack)
+	{
+	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
+	}
       this->checkPrecision();
       this->memory->push(*this->registers[2] + this->registers[3]);
     }
@@ -171,10 +177,15 @@ std::string	CPU::div(std::vector<std::string> &frame)
 {
   if (checkParam(frame, 0))
     {
-      //exeption rien sur la pile
-      this->registers[0] = this->memory->pop();
-      this->registers[1] = this->memory->pop();
-      //exeption divition par zero;
+      try
+	{
+	  this->registers[0] = this->memory->pop();
+	  this->registers[1] = this->memory->pop();
+	}
+      catch (Memory::EmptyStack)
+	{
+	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
+	}
       this->checkPrecision();
       this->memory->push(*this->registers[2] / this->registers[3]);
     }
@@ -187,9 +198,15 @@ std::string	CPU::sub(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
     {
-      //exeption rien sur la pile
-      this->registers[0] = this->memory->pop();
-      this->registers[1] = this->memory->pop();
+      try
+	{
+	  this->registers[0] = this->memory->pop();
+	  this->registers[1] = this->memory->pop();
+	}
+      catch (Memory::EmptyStack)
+	{
+	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
+	}
       this->checkPrecision();
       this->memory->push(*this->registers[2] - this->registers[3]);
     }
@@ -202,11 +219,17 @@ std::string	CPU::mod(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
     {
-      //exeption rien sur la pile
-      this->registers[0] = this->memory->pop();
-      this->registers[1] = this->memory->pop();
+      try
+	{
+	  this->registers[0] = this->memory->pop();
+	  this->registers[1] = this->memory->pop();
+	}
+      catch (Memory::EmptyStack)
+	{
+	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
+	}
+	
       this->checkPrecision();
-      //exeption divition par zero;
       this->memory->push(*this->registers[2] % this->registers[3]);
     }
  else
@@ -218,9 +241,15 @@ std::string	CPU::mul(std::vector<std::string> &frame)
 {
  if (checkParam(frame, 0))
     {
-      //exeption rien sur la pile
-      this->registers[0] = this->memory->pop();
-      this->registers[1] = this->memory->pop();
+      try
+	{
+	  this->registers[0] = this->memory->pop();
+	  this->registers[1] = this->memory->pop();
+	}
+      catch (Memory::EmptyStack)
+	{
+	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
+	}
       this->checkPrecision();
       this->memory->push(*this->registers[2] * this->registers[3]);
     }
