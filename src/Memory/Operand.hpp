@@ -25,6 +25,40 @@ private:
     return (tmp);
   }
 public:
+  class Overflow : public OperandException
+  {
+  public:
+    Overflow(const std::string &msg, int line)
+      : OperandException(msg, line)
+    {}
+    virtual ~Overflow() {}
+  }
+  class Underflow : public OperandException
+  {
+  public:
+    Underflow(const std::string &msg, int line)
+      : OperandException(msg, line)
+    {}
+    virtual ~Underflow() {}
+  }
+  class DivideByZero : public OperandException
+  {
+  public:
+    DivideByZero(const std::string &msg, int line)
+      : OperandException(msg, line)
+    {}
+    virtual ~DivideByZero() {}
+  }
+
+  class InvalidOperation : public OperandException
+  {
+  public:
+    InvalidOperation(const std::string &msg, int line)
+      : OperandException(msg, line)
+    {}
+    virtual ~InvalidOperation() {}
+  }
+
   Operand(eOperandType type, T const value)
     : _type(type), _value(value)
   {
@@ -59,9 +93,9 @@ public:
 
     op_value = this->getValueOfType((op->toString()));
     if ((op_value > 0) && (this->_value > (std::numeric_limits<T>::max()) - op_value))
-      return (0);
+      throw Operand::Overflow("overflow operation.", __LINE__);
     if ((op_value < 0) && (this->_value < (std::numeric_limits<T>::min()) - op_value))
-      return (0);
+      throw Operand::Overflow("underflow operation.", __LINE__);
     return (new Operand<T>(this->_type, this->_value + op_value));
   }
 
@@ -71,9 +105,9 @@ public:
 
     op_value = this->getValueOfType(op->toString());
     if ((op_value < 0) && (this->_value < (std::numeric_limits<T>::max()) - op_value))
-      return (0);
+      throw Operand::Overflow("overflow operation.", __LINE__);
     if ((op_value > 0) && (this->_value > (std::numeric_limits<T>::min()) - op_value))
-      return (0);
+      throw Operand::Overflow("underflow operation.", __LINE__);
     return (new Operand<T>(this->_type, this->_value - op_value));
   }
 
@@ -83,7 +117,9 @@ public:
 
     op_value = this->getValueOfType(op->toString());
     if ((std::numeric_limits<T>::max() / this->_value) < op_value)
-      return (0);
+      throw Operand::Overflow("overflow operation.", __LINE__);
+    // if ((std::numeric_limits<T>::min() / this->_value) < op_value)
+    //   throw Operand::Overflow("overflow operation.", __LINE__);
     return (new Operand<T>(this->_type, this->_value * op_value));
   }
 
@@ -92,10 +128,13 @@ public:
     T op_value;
 
     op_value = this->getValueOfType(op->toString());
+    if (op_value == 0)
+      throw Operand::DivideByZero("divide by zero", __LINE__);
     return (new Operand<T>(this->_type, this->_value / op_value));
   }
 
   IOperand*	operator%(const IOperand *op) const;
+
 };
 
 
@@ -105,6 +144,8 @@ IOperand*	Operand<T>::operator%(const IOperand *op) const
   T op_value;
 
   op_value = this->getValueOfType(op->toString());
+  if (op_value == 0)
+    throw Operand::DivideByZero("divide by zero", __LINE__);
   return (new Operand<T>(this->_type, this->_value % op_value));
 }
 
@@ -112,13 +153,13 @@ IOperand*	Operand<T>::operator%(const IOperand *op) const
 template<>
 IOperand*	Operand<double>::operator%(const IOperand *) const
 {
-  return 0;
+  throw Operand::InvalidOperation("invalid modulo operation on double", __LINE__);
 }
 
 template<>
 IOperand*	Operand<float>::operator%(const IOperand *) const
 {
-  return 0;
+  throw Operand::InvalidOperation("invalid modulo operation on float", __LINE__);
 }
 
 template<>

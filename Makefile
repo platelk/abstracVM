@@ -8,6 +8,7 @@ CHIPSET		=	./src/Chipset/
 MEMORY		=	./src/Memory/
 IO		=	./src/IO/
 MOTHERBOARD	=	./src/MotherBoard/
+EXCEPTION	=	./src/Exceptions/
 
 SRC	=	$(CPU)CPU.cpp \
 		$(CHIPSET)Chipset.cpp \
@@ -18,7 +19,7 @@ SRC	=	$(CPU)CPU.cpp \
 
 OBJ	=	$(SRC:.$(SRC_EXT)=.$(OBJ_EXT))
 
-INC	=	-I $(CPU) -I $(CHIPSET) -I $(MEMORY) -I $(IO) -I $(MOTHERBOARD)
+INC	=	-I $(CPU) -I $(CHIPSET) -I $(MEMORY) -I $(IO) -I $(MOTHERBOARD) -I $(EXCEPTION)
 
 CC	=	g++
 
