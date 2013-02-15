@@ -1,4 +1,7 @@
 #include	<iostream>
+#include	<ostream>
+#include	<istream>
+#include	<fstream>
 #include	<sstream>
 #include	"IO.hh"
 
@@ -34,5 +37,7 @@ std::string	IO::get()
 
 void		IO::send(const std::string &str)
 {
+  
   this->output << str;
+  this->output.flush();
 }
