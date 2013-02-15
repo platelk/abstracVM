@@ -5,7 +5,7 @@
 // Login   <kevin platel@epitech.net>
 //
 // Started on  Tue Feb 12 10:24:50 2013 vink
-// Last update Tue Feb 12 21:45:08 2013 vink
+// Last update Fri Feb 15 11:00:53 2013 vink
 //
 
 #include <iostream>
@@ -48,6 +48,8 @@ IOperand*	Memory::pop()
 {
   IOperand*	tmp;
 
+  if (this->mem.empty())
+    throw Memory::EmptyStack("invalid pop on a empty stack.", __LINE__);
   tmp = this->mem[0];
   this->mem.pop_front();
   return (tmp);
@@ -55,6 +57,8 @@ IOperand*	Memory::pop()
 
 void		Memory::push(IOperand *a)
 {
+  if (a == 0)
+    throw Memory::InvalidPush("invalid value push.", __LINE__);
   this->mem.push_front(a);
 }
 

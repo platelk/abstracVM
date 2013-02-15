@@ -5,6 +5,7 @@
 #include <deque>
 #include <map>
 
+#include "AException.hh"
 #include "IOperand.hh"
 
 class Memory
@@ -32,6 +33,25 @@ public:
   IOperand*	createInt8(std::string const  &);
 
   void		operator()(IOperand *a);
+
+  class EmptyStack : public MemoryException
+  {
+    public:
+    EmptyStack(const std::string &msg, int line)
+      : MemoryException(msg, line)
+    {
+    }
+    virtual ~EmptyStack() throw() {}
+  };
+  class InvalidPush : public MemoryException
+  {
+    public:
+    InvalidPush(const std::string &msg, int line)
+      : MemoryException(msg, line)
+    {
+    }
+    virtual ~InvalidPush() throw() {}
+  };
 };
 
 #endif /* !__MEMORY_H__ */
