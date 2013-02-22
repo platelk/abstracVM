@@ -179,7 +179,7 @@ std::string	CPU::add(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] + *this->registers[3]);
+      this->memory->push(*this->registers[3] + *this->registers[2]);
       delete this->registers[2];
       delete this->registers[3];
     }
@@ -202,7 +202,7 @@ std::string	CPU::div(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] / *this->registers[3]);
+      this->memory->push(*this->registers[3] / *this->registers[2]);
       delete this->registers[2];
       delete this->registers[3];
     }
@@ -225,7 +225,7 @@ std::string	CPU::sub(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] - *this->registers[3]);
+      this->memory->push(*this->registers[3] - *this->registers[2]);
       delete this->registers[2];
       delete this->registers[3];
     }
@@ -249,7 +249,7 @@ std::string	CPU::mod(std::vector<std::string> &frame)
 	}
 
       this->checkPrecision();
-      this->memory->push(*this->registers[2] % *this->registers[3]);
+      this->memory->push(*this->registers[3] % *this->registers[2]);
       delete this->registers[2];
       delete this->registers[3];
     }
@@ -272,7 +272,7 @@ std::string	CPU::mul(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] * *this->registers[3]);
+      this->memory->push(*this->registers[3] * *this->registers[2]);
       delete this->registers[2];
       delete this->registers[3];
     }
@@ -334,7 +334,7 @@ std::string	CPU::assert(std::vector<std::string> &frame)
 	{
 	  this->registers[0] = this->memory->pop();
 	  this->memory->push(this->registers[0]);
-	  if (this->registers[0]->toString() != value)
+	  if (this->registers[0]->getType() != type || this->registers[0]->toString() != value)
 	    throw AssertFaillure("Instruction \"assert\" fail", __LINE__);
 	}
       else

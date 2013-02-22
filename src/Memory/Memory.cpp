@@ -5,7 +5,7 @@
 // Login   <kevin platel@epitech.net>
 //
 // Started on  Tue Feb 12 10:24:50 2013 vink
-// Last update Fri Feb 22 16:52:01 2013 vink
+// Last update Fri Feb 22 17:30:47 2013 vink
 //
 
 #include <iostream>
@@ -31,15 +31,20 @@ Memory::~Memory()
 {
   while (!this->mem.empty())
     {
-      delete this->mem.front();
+      if (this->mem.front())
+	delete this->mem.front();
       this->mem.pop_front();
     }
 }
 
 std::string &	Memory::dump()
 {
-  this->_dump = "";
-  this->_dump = (std::for_each(this->mem.begin(), this->mem.end(), *this))._dump;
+  int	i = 0;
+  while (i < this->mem.size())
+    {
+      this->_dump += this->mem[i]->toString() + "\n";
+      i++;
+    }
   return (this->_dump);
 }
 
@@ -59,7 +64,7 @@ IOperand*	Memory::pop()
 
   if (this->mem.empty())
     throw Memory::EmptyStack("invalid pop on a empty stack.", __LINE__);
-  tmp = this->mem[0];
+  tmp = this->mem.front();
   this->mem.pop_front();
   return (tmp);
 }

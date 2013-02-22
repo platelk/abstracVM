@@ -116,10 +116,8 @@ public:
     T op_value;
 
     op_value = this->getValueOfType(op.toString());
-    if ((std::numeric_limits<T>::max() / this->_value) < op_value)
+    if ((std::numeric_limits<T>::max() / (this->_value < 0 ? (this->_value * -1) : this->_value)) < (op_value < 0 ? (op_value * -1) : op_value))
       throw Operand::Overflow("overflow operation.", __LINE__);
-    // if ((std::numeric_limits<T>::min() / this->_value) < op_value)
-    //   throw Operand::Overflow("overflow operation.", __LINE__);
     return (new Operand<T>(this->_type, this->_value * op_value));
   }
 

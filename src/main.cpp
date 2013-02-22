@@ -41,4 +41,5 @@ int	main(int argc, char **argv)
       return (-1);
     }
   return (0);
+  // penser au try et au poweroff
 }

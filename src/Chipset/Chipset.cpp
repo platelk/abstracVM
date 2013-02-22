@@ -31,8 +31,6 @@ std::vector<std::string>	*Chipset::get()
 	res->push_back(buff);
       if (res->size())
 	return (res);
-      else
-	delete res;
     }
   return (0);
 }
