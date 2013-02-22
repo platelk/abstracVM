@@ -25,13 +25,20 @@ int	main(int argc, char **argv)
 {
   std::istream	*in = getInput(argc, argv);
   std::ostream	*out = getOutput(argc, argv);
-  
+
   IO		i(*in, *out);
   Chipset	c(&i);
   Memory	m;
   CPU		u(&c, &m);
   MotherBoard	mother(&c, &m, &u);
-  mother.boot();
+  try
+    {
+      mother.boot();
+    }
+  catch (std::exception &e)
+    {
+      std::cerr << e.what() << std::endl;
+      return (-1);
+    }
   return (0);
-  // penser au try et au poweroff
 }

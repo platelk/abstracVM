@@ -5,7 +5,7 @@
 // Login   <kevin platel@epitech.net>
 //
 // Started on  Tue Feb 12 10:24:50 2013 vink
-// Last update Fri Feb 15 11:00:53 2013 vink
+// Last update Fri Feb 22 16:52:01 2013 vink
 //
 
 #include <iostream>
@@ -25,6 +25,15 @@ Memory::Memory()
   this->create[Int32] = &Memory::createInt32;
   this->create[Float] = &Memory::createFloat;
   this->create[Double] = &Memory::createDouble;
+}
+
+Memory::~Memory()
+{
+  while (!this->mem.empty())
+    {
+      delete this->mem.front();
+      this->mem.pop_front();
+    }
 }
 
 std::string &	Memory::dump()

@@ -87,11 +87,11 @@ public:
     return (ss.str());
   }
 
-  IOperand*	operator+(const IOperand *op) const
+  IOperand*	operator+(const IOperand &op) const
   {
     T op_value;
 
-    op_value = this->getValueOfType((op->toString()));
+    op_value = this->getValueOfType((op.toString()));
     if ((op_value > 0) && (this->_value > (std::numeric_limits<T>::max()) - op_value))
       throw Operand::Overflow("overflow operation.", __LINE__);
     if ((op_value < 0) && (this->_value < (std::numeric_limits<T>::min()) - op_value))
@@ -99,11 +99,11 @@ public:
     return (new Operand<T>(this->_type, this->_value + op_value));
   }
 
-  IOperand*	operator-(const IOperand *op) const
+  IOperand*	operator-(const IOperand &op) const
   {
     T op_value;
 
-    op_value = this->getValueOfType(op->toString());
+    op_value = this->getValueOfType(op.toString());
     if ((op_value < 0) && (this->_value < (std::numeric_limits<T>::max()) - op_value))
       throw Operand::Overflow("overflow operation.", __LINE__);
     if ((op_value > 0) && (this->_value > (std::numeric_limits<T>::min()) - op_value))
@@ -111,11 +111,11 @@ public:
     return (new Operand<T>(this->_type, this->_value - op_value));
   }
 
-  IOperand*	operator*(const IOperand *op) const
+  IOperand*	operator*(const IOperand &op) const
   {
     T op_value;
 
-    op_value = this->getValueOfType(op->toString());
+    op_value = this->getValueOfType(op.toString());
     if ((std::numeric_limits<T>::max() / this->_value) < op_value)
       throw Operand::Overflow("overflow operation.", __LINE__);
     // if ((std::numeric_limits<T>::min() / this->_value) < op_value)
@@ -123,27 +123,27 @@ public:
     return (new Operand<T>(this->_type, this->_value * op_value));
   }
 
-  IOperand*	operator/(const IOperand *op) const
+  IOperand*	operator/(const IOperand &op) const
   {
     T op_value;
 
-    op_value = this->getValueOfType(op->toString());
+    op_value = this->getValueOfType(op.toString());
     if (op_value == 0)
       throw Operand::DivideByZero("divide by zero", __LINE__);
     return (new Operand<T>(this->_type, this->_value / op_value));
   }
 
-  IOperand*	operator%(const IOperand *op) const;
+  IOperand*	operator%(const IOperand &op) const;
 
 };
 
 
 template<typename T>
-IOperand*	Operand<T>::operator%(const IOperand *op) const
+IOperand*	Operand<T>::operator%(const IOperand &op) const
 {
   T op_value;
 
-  op_value = this->getValueOfType(op->toString());
+  op_value = this->getValueOfType(op.toString());
   if (op_value == 0)
     throw Operand::DivideByZero("divide by zero", __LINE__);
   return (new Operand<T>(this->_type, this->_value % op_value));
@@ -151,13 +151,13 @@ IOperand*	Operand<T>::operator%(const IOperand *op) const
 
 
 template<>
-IOperand*	Operand<double>::operator%(const IOperand *) const
+IOperand*	Operand<double>::operator%(const IOperand &) const
 {
   throw Operand::InvalidOperation("invalid modulo operation on double", __LINE__);
 }
 
 template<>
-IOperand*	Operand<float>::operator%(const IOperand *) const
+IOperand*	Operand<float>::operator%(const IOperand &) const
 {
   throw Operand::InvalidOperation("invalid modulo operation on float", __LINE__);
 }

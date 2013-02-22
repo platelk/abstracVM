@@ -17,7 +17,7 @@ public:
   ~MotherBoard();
   MotherBoard(const MotherBoard &);
   MotherBoard &operator=(const MotherBoard &);
-  
+
   void	setChipset(Chipset *);
   void	setCPU(CPU *);
   void	setMemory(Memory *);

@@ -83,14 +83,17 @@ bool	CPU::exec()
 	    }
 	  if (!this->finished)
 	    throw CPU::MissingExit("missing exit instruction", __LINE__ );
+	  delete frame;
 	  return (true);
 	}
       else
 	{
 	  std::string	error("Unknown instruction ");
+	  delete frame;
 	  throw CPU::UnknownInstruction(error + f_action, __LINE__ );
 	}
     }
+  delete frame;
   return (false);
 }
 
@@ -147,11 +150,17 @@ void		CPU::checkPrecision()
   this->registers[2] = this->registers[0];
   this->registers[3] = this->registers[1];
   if (this->registers[0]->getType() < this->registers[1]->getType())
-    this->registers[2] = this->memory->createOperand(this->registers[1]->getType(),
-						     this->registers[0]->toString());
+    {
+      this->registers[2] = this->memory->createOperand(this->registers[1]->getType(),
+						       this->registers[0]->toString());
+      delete this->registers[0];
+    }
   else if (this->registers[1]->getType() < this->registers[0]->getType())
-    this->registers[3] = this->memory->createOperand(this->registers[0]->getType(),
-						     this->registers[1]->toString());
+    {
+      this->registers[3] = this->memory->createOperand(this->registers[0]->getType(),
+						       this->registers[1]->toString());
+      delete this->registers[1];
+    }
 }
 
 std::string	CPU::add(std::vector<std::string> &frame)
@@ -168,7 +177,9 @@ std::string	CPU::add(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] + this->registers[3]);
+      this->memory->push(*this->registers[2] + *this->registers[3]);
+      delete this->registers[2];
+      delete this->registers[3];
     }
   else
     throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
@@ -189,7 +200,9 @@ std::string	CPU::div(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] / this->registers[3]);
+      this->memory->push(*this->registers[2] / *this->registers[3]);
+      delete this->registers[2];
+      delete this->registers[3];
     }
   else
     throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
@@ -210,7 +223,9 @@ std::string	CPU::sub(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] - this->registers[3]);
+      this->memory->push(*this->registers[2] - *this->registers[3]);
+      delete this->registers[2];
+      delete this->registers[3];
     }
  else
    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
@@ -230,9 +245,11 @@ std::string	CPU::mod(std::vector<std::string> &frame)
 	{
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
-	
+
       this->checkPrecision();
-      this->memory->push(*this->registers[2] % this->registers[3]);
+      this->memory->push(*this->registers[2] % *this->registers[3]);
+      delete this->registers[2];
+      delete this->registers[3];
     }
  else
    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
@@ -253,7 +270,9 @@ std::string	CPU::mul(std::vector<std::string> &frame)
 	  throw Memory::InvalidPops("There less than 2 values on the stack", __LINE__);
 	}
       this->checkPrecision();
-      this->memory->push(*this->registers[2] * this->registers[3]);
+      this->memory->push(*this->registers[2] * *this->registers[3]);
+      delete this->registers[2];
+      delete this->registers[3];
     }
  else
    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
@@ -314,7 +333,7 @@ std::string	CPU::assert(std::vector<std::string> &frame)
 	  this->registers[0] = this->memory->pop();
 	  this->memory->push(this->registers[0]);
 	  if (this->registers[0]->toString() != value)
-	    throw AssertFaillure("Instruction \"assert\" fail", __LINE__);  
+	    throw AssertFaillure("Instruction \"assert\" fail", __LINE__);
 	}
       else
 	{
@@ -353,4 +372,3 @@ std::string	CPU::print(std::vector<std::string> &frame)
     throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
   return (std::string(""));
 }
-

@@ -17,7 +17,7 @@ private:
   ptrFunc	create[5];
 public:
   Memory();
-  virtual ~Memory() {};
+  virtual ~Memory();
 
   std::string &	dump();
   IOperand*	get() const;

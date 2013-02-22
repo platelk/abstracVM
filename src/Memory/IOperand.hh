@@ -20,11 +20,11 @@ public:
   virtual eOperandType	getType() const = 0;
   virtual std::string	toString() const = 0;
 
-  virtual IOperand*	operator+(const IOperand *op) const = 0;
-  virtual IOperand*	operator-(const IOperand *op) const = 0;
-  virtual IOperand*	operator*(const IOperand *op) const = 0;
-  virtual IOperand*	operator/(const IOperand *op) const = 0;
-  virtual IOperand*	operator%(const IOperand *op) const = 0;
+  virtual IOperand*	operator+(const IOperand &op) const = 0;
+  virtual IOperand*	operator-(const IOperand &op) const = 0;
+  virtual IOperand*	operator*(const IOperand &op) const = 0;
+  virtual IOperand*	operator/(const IOperand &op) const = 0;
+  virtual IOperand*	operator%(const IOperand &op) const = 0;
 };
 
 #endif /* !__IOPERAND_H__ */
