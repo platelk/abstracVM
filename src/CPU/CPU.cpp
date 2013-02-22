@@ -1,3 +1,4 @@
+#include	<sstream>
 #include	<iostream>
 #include	"CPU.hh"
 
@@ -32,12 +33,11 @@ CPU::CPU(Chipset *c, Memory *m):
   this->action["dump"] = &CPU::dump;
   this->action["exit"] = &CPU::exit;
   this->action["assert"] = &CPU::assert;
+  this->action["print"] = &CPU::print;
 }
 
   CPU::~CPU()
 {
-  if (!finished)
-    std::cout << "ERROR" << std::endl;
 }
 
 
@@ -81,6 +81,8 @@ bool	CPU::exec()
 	      else
 		this->chipset->send(res);
 	    }
+	  if (!this->finished)
+	    throw CPU::MissingExit("missing exit instruction", __LINE__ );
 	  return (true);
 	}
       else
@@ -325,4 +327,30 @@ std::string	CPU::assert(std::vector<std::string> &frame)
   return (std::string(""));
 }
 
+std::string	CPU::print(std::vector<std::string> &frame)
+{
+  if (checkParam(frame, 0))
+    {
+      this->registers[0] = this->memory->pop();
+      this->memory->push(this->registers[0]);
+      if (registers[0]->getType() == Int8)
+	{
+	  int nb;
+	  std::istringstream(registers[0]->toString()) >> nb;
+	  char	v[2];
+	  v[0] = nb;
+	  v[1] = '\0';
+	  std::string	res(v);
+	  return (v);
+	}
+      else
+	{
+	  std::string	error("Syntax error, bad type in print");
+	  throw CPU::SyntaxError(error, __LINE__);
+	}
+    }
+  else
+    throw CPU::SyntaxError("Syntax error, not enough parameters", __LINE__);
+  return (std::string(""));
+}
 

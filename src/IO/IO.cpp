@@ -15,7 +15,8 @@ IO::IO(std::istream &i, std::ostream &o):
   while (!enough && getline(this->input, line))
     {
       std::stringstream	is(line);
-      if ((is >> end) == ";;")
+      is >> end;
+      if (end == ";;")
 	enough = true;
       else
 	this->buffer << line << std::endl;
