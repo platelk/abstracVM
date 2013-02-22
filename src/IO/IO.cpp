@@ -16,7 +16,7 @@ IO::IO(std::istream &i, std::ostream &o):
     {
       std::stringstream	is(line);
       is >> end;
-      if (end == ";;")
+      if (end == ";;" && this->input == std::cin)
 	enough = true;
       else
 	this->buffer << line << std::endl;
