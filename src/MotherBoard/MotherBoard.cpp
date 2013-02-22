@@ -43,4 +43,6 @@ CPU	*MotherBoard::getCPU()	const
 void	MotherBoard::boot()
 {
   while (this->cpu->exec());
+  if (!this->cpu->is_finished())
+    throw CPU::MissingExit("missing exit instruction", __LINE__ );
 }

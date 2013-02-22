@@ -61,6 +61,10 @@ void		CPU::setMemory(Memory *m)
   this->memory = m;
 }
 
+bool	CPU::is_finished()	const
+{
+  return (this->finished);
+}
 
 bool	CPU::exec()
 {
@@ -81,8 +85,6 @@ bool	CPU::exec()
 	      else
 		this->chipset->send(res);
 	    }
-	  if (!this->finished)
-	    throw CPU::MissingExit("missing exit instruction", __LINE__ );
 	  delete frame;
 	  return (true);
 	}

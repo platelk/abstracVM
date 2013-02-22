@@ -72,6 +72,8 @@ public:
 
   bool		checkParam(std::vector<std::string> &, unsigned int);
 
+  bool		is_finished()	const;
+
   std::string	add(std::vector<std::string> &);
   std::string	div(std::vector<std::string> &);
   std::string	sub(std::vector<std::string> &);
